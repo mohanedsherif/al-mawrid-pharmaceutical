@@ -16,14 +16,14 @@
 
 4. **You should see:**
    ```
-   🚀 AL-MAWRID Pharmaceuticals API Server running on port 8081
-   📊 Health check: http://localhost:8081/health
+   🚀 AL-MAWRID Pharmaceuticals API Server running on port 8080
+   📊 Health check: http://localhost:8080/health
    🔗 Frontend URL: http://localhost:5173
    🌍 Environment: development
    ```
 
 5. **Verify it's working:**
-   - Open browser: `http://localhost:8081/health`
+   - Open browser: `http://localhost:8080/health`
    - You should see: `{"status":"ok","message":"AL-MAWRID Pharmaceuticals API is running",...}`
 
 ## Test Login
@@ -36,7 +36,7 @@ Once the backend is running, you can login with:
 ## Troubleshooting
 
 **Port already in use?**
-- Check if another service is using port 8081
+- Check if another service is using port 8080
 - You can change the port in `backend/.env` file
 
 **Dependencies missing?**

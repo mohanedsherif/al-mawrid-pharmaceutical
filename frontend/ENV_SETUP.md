@@ -1,7 +1,7 @@
 # Environment Variables Setup
 
 ## Problem
-When deploying to Firebase, the app tries to connect to `http://localhost:8081/api` which doesn't work in production.
+When deploying to Firebase, the app tries to connect to `http://localhost:8080/api` which doesn't work in production.
 
 ## Solution
 
@@ -21,7 +21,7 @@ Create these files in the `frontend` directory:
 
 #### `frontend/.env` (for local development)
 ```
-VITE_API_URL=http://localhost:8081/api
+VITE_API_URL=http://localhost:8080/api
 ```
 
 #### `frontend/.env.production` (for production builds)
@@ -60,7 +60,7 @@ If you deploy your backend, make sure it includes these origins in its CORS conf
 
 ```bash
 # Create .env for local development
-echo "VITE_API_URL=http://localhost:8081/api" > frontend/.env
+echo "VITE_API_URL=http://localhost:8080/api" > frontend/.env
 
 # Create .env.production (replace with your backend URL)
 echo "VITE_API_URL=https://your-backend-url.com/api" > frontend/.env.production
@@ -72,6 +72,6 @@ npm run deploy
 
 ## Verification
 
-After deployment, check the browser console. You should see API requests going to your production backend URL, not `localhost:8081`.
+After deployment, check the browser console. You should see API requests going to your production backend URL, not `localhost:8080`.
 
 

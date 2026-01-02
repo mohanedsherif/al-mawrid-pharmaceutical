@@ -102,7 +102,7 @@ const LoginPage = () => {
                                 error?.message?.includes('ERR_CONNECTION_REFUSED');
       
       if (isConnectionError) {
-        setLoginError('Cannot connect to server. Please make sure the backend server is running on port 8081.');
+        setLoginError('Cannot connect to server. Please make sure the backend server is running on port 8080.');
         return;
       }
       

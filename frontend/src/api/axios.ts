@@ -3,7 +3,7 @@ import type { AxiosRequestConfig } from 'axios';
 import { clearTokens, getTokens, setTokens } from './tokenStorage';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:8081/api',
+  baseURL: import.meta.env.VITE_API_URL || 'https://al-mawrid-pharmaceutical-production.up.railway.app/api',
   withCredentials: true,
 });
 
@@ -72,7 +72,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
   try {
     const res = await axios.post(
-      (import.meta.env.VITE_API_URL ?? 'http://localhost:8081/api') + '/auth/refresh',
+      (import.meta.env.VITE_API_URL ?? 'https://al-mawrid-pharmaceutical-production.up.railway.app/api') + '/auth/refresh',
       { refreshToken },
       { withCredentials: true }
     );

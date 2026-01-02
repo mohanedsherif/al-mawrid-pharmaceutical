@@ -42,7 +42,7 @@ if (window.__REDUX_DEVTOOLS_EXTENSION__) {
 
 // 4. Test API call
 console.log('\n4. Testing API Call:');
-fetch('http://localhost:8081/api/admin/dashboard/stats', {
+fetch('http://localhost:8080/api/admin/dashboard/stats', {
   method: 'GET',
   headers: {
     'Authorization': accessToken ? `Bearer ${accessToken}` : '',

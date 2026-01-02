@@ -42,7 +42,7 @@ cp .env.example .env
 
 3. Update `.env` with your configuration:
 ```env
-PORT=8081
+PORT=8080
 NODE_ENV=development
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 JWT_REFRESH_SECRET=your-super-secret-refresh-token-key-change-this-too
@@ -62,7 +62,7 @@ npm run build
 npm start
 ```
 
-The server will start on `http://localhost:8081`
+The server will start on `http://localhost:8080`
 
 ## API Endpoints
 

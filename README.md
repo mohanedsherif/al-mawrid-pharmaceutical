@@ -57,7 +57,7 @@ npm run dev
 
 #### Backend (`backend/.env`)
 ```env
-PORT=8081
+PORT=8080
 JWT_SECRET=your-secret-key
 JWT_REFRESH_SECRET=your-refresh-secret
 FRONTEND_URL=http://localhost:5173
@@ -66,7 +66,7 @@ NODE_ENV=development
 
 #### Frontend (`frontend/.env`)
 ```env
-VITE_API_URL=http://localhost:8081/api
+VITE_API_URL=http://localhost:8080/api
 ```
 
 ## 🚢 Deployment
@@ -132,7 +132,7 @@ firebase deploy --only hosting
 
 1. Start backend: `cd backend && npm run dev`
 2. Start frontend: `cd frontend && npm run dev`
-3. Backend runs on: http://localhost:8081
+3. Backend runs on: http://localhost:8080
 4. Frontend runs on: http://localhost:5173
 
 ## 📦 Build

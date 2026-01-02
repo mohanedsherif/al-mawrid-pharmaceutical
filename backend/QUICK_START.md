@@ -16,10 +16,10 @@ The Node.js backend has been successfully created and all dependencies are insta
    npm run dev
    ```
 
-   The server will start on `http://localhost:8081`
+   The server will start on `http://localhost:8080`
 
 3. **Verify it's running:**
-   - Open browser: `http://localhost:8081/health`
+   - Open browser: `http://localhost:8080/health`
    - You should see: `{"status":"ok","message":"AL-MAWRID Pharmaceuticals API is running",...}`
 
 ## 🔐 Default Admin Account
@@ -33,7 +33,7 @@ After the server starts, you can login with:
 
 ## 📡 API Endpoints
 
-### Base URL: `http://localhost:8081/api`
+### Base URL: `http://localhost:8080/api`
 
 ### Authentication
 - `POST /api/auth/register` - Register new user
@@ -77,7 +77,7 @@ After the server starts, you can login with:
 ## 🔧 Configuration
 
 The `.env` file has been created with default values:
-- `PORT=8081`
+- `PORT=8080`
 - `JWT_SECRET` - Change this in production!
 - `FRONTEND_URL=http://localhost:5173`
 
