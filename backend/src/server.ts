@@ -14,7 +14,7 @@ import { notFoundHandler } from './middleware/notFoundHandler';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 8081;
+const PORT = process.env.PORT || 8080; // Railway uses PORT env variable, default to 8080
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 // Allowed origins - add all frontend URLs here

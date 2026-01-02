@@ -15,7 +15,7 @@ COPY backend/ .
 RUN npm run build
 
 # Expose port (Railway sets PORT automatically)
-EXPOSE ${PORT:-8081}
+EXPOSE ${PORT:-8080}
 
 # Start server
 CMD ["npm", "start"]
