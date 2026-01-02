@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Firebase Authentication & Firestore Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Firebase Initialization</h2>
+        <button onclick="testInit()">Test Init</button>
+        <div id="init-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. Firebase Authentication Test</h2>
+        <input type="email" id="test-email" placeholder="Test email" value="test@example.com">
+        <input type="password" id="test-password" placeholder="Test password" value="test123456">
+        <button onclick="testAuth()">Test Auth</button>
+        <button onclick="signOut()">Sign Out</button>
+        <div id="auth-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. Firestore Read Test</h2>
+        <button onclick="testRead()">Test Read Products</button>
+        <div id="read-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Firestore Write Test</h2>
+        <button onclick="testWrite()">Test Write Cart</button>
+        <div id="write-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Check Current Auth State</h2>
+        <button onclick="checkAuthState()">Check Auth</button>
+        <div id="auth-state"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAnalytics } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics.js';
+        import { getFirestore, collection, getDocs, doc, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut as firebaseSignOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyC2EW9KkQRKZMhjzxPjUSTjeQw0DJtgofk",
+            authDomain: "al-mawrid-1.firebaseapp.com",
+            projectId: "al-mawrid-1",
+            storageBucket: "al-mawrid-1.firebasestorage.app",
+            messagingSenderId: "958348791060",
+            appId: "1:958348791060:web:97c293575874cdb56ac601",
+            measurementId: "G-ZEJ0TY5SCD"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        let analytics;
+        if (typeof window !== 'undefined') {
+            analytics = getAnalytics(app);
+        }
+
+        // Monitor auth state
+        onAuthStateChanged(auth, (user) => {
+            const stateDiv = document.getElementById('auth-state');
+            if (user) {
+                stateDiv.innerHTML = `<p class="success">✅ Authenticated as: ${user.email} (UID: ${user.uid})</p>`;
+            } else {
+                stateDiv.innerHTML = `<p class="error">❌ Not authenticated</p>`;
+            }
+        });
+
+        window.testInit = () => {
+            const resultDiv = document.getElementById('init-result');
+            try {
+                resultDiv.innerHTML = `
+                    <p class="success">✅ Firebase initialized successfully</p>
+                    <pre>App: ${app.name}
+Firestore: ${db ? 'Connected' : 'Not connected'}
+Auth: ${auth ? 'Initialized' : 'Not initialized'}</pre>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">❌ Error: ${error.message}</p>`;
+            }
+        };
+
+        window.testAuth = async () => {
+            const resultDiv = document.getElementById('auth-result');
+            const email = document.getElementById('test-email').value;
+            const password = document.getElementById('test-password').value;
+
+            resultDiv.innerHTML = '<p>Testing authentication...</p>';
+
+            try {
+                // Try to sign in first
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ Signed in successfully!</p>
+                        <pre>Email: ${userCredential.user.email}
+UID: ${userCredential.user.uid}</pre>
+                    `;
+                } catch (signInError) {
+                    // If user doesn't exist, try to create
+                    if (signInError.code === 'auth/user-not-found') {
+                        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                        resultDiv.innerHTML = `
+                            <p class="success">✅ User created and signed in!</p>
+                            <pre>Email: ${userCredential.user.email}
+UID: ${userCredential.user.uid}</pre>
+                        `;
+                    } else {
+                        throw signInError;
+                    }
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Auth Error: ${error.code}</p>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        };
+
+        window.signOut = async () => {
+            const resultDiv = document.getElementById('auth-result');
+            try {
+                await firebaseSignOut(auth);
+                resultDiv.innerHTML = '<p class="success">✅ Signed out successfully</p>';
+            } catch (error) {
+                resultDiv.innerHTML = `<p class="error">❌ Sign out error: ${error.message}</p>`;
+            }
+        };
+
+        window.testRead = async () => {
+            const resultDiv = document.getElementById('read-result');
+            resultDiv.innerHTML = '<p>Testing Firestore read...</p>';
+
+            try {
+                const productsRef = collection(db, 'products');
+                const snapshot = await getDocs(productsRef);
+                
+                if (snapshot.empty) {
+                    resultDiv.innerHTML = '<p class="success">✅ Read successful - Collection is empty</p>';
+                } else {
+                    const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ Read successful - Found ${products.length} products</p>
+                        <pre>${JSON.stringify(products.slice(0, 3), null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Read Error: ${error.code || 'Unknown'}</p>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        };
+
+        window.testWrite = async () => {
+            const resultDiv = document.getElementById('write-result');
+            resultDiv.innerHTML = '<p>Testing Firestore write...</p>';
+
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    resultDiv.innerHTML = '<p class="error">❌ Must be authenticated to write. Please sign in first.</p>';
+                    return;
+                }
+
+                const testCart = {
+                    userId: user.uid,
+                    items: [
+                        { productId: 'test-1', productName: 'Test Product', price: 99.99, quantity: 1 }
+                    ],
+                    updatedAt: new Date()
+                };
+
+                const cartRef = doc(db, 'carts', user.uid);
+                await setDoc(cartRef, testCart, { merge: true });
+
+                // Verify write
+                const cartSnap = await getDoc(cartRef);
+                if (cartSnap.exists()) {
+                    resultDiv.innerHTML = `
+                        <p class="success">✅ Write successful!</p>
+                        <pre>${JSON.stringify(cartSnap.data(), null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = '<p class="error">❌ Write appeared successful but document not found</p>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <p class="error">❌ Write Error: ${error.code || 'Unknown'}</p>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        };
+
+        window.checkAuthState = () => {
+            const user = auth.currentUser;
+            const stateDiv = document.getElementById('auth-state');
+            if (user) {
+                stateDiv.innerHTML = `
+                    <p class="success">✅ Currently authenticated</p>
+                    <pre>Email: ${user.email}
+UID: ${user.uid}
+Email Verified: ${user.emailVerified}</pre>
+                `;
+            } else {
+                stateDiv.innerHTML = '<p class="error">❌ Not authenticated</p>';
+            }
+        };
+
+        // Auto-run init test
+        window.testInit();
+    </script>
+</body>
+</html>
+
+

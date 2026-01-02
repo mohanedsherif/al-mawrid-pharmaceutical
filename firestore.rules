@@ -1,0 +1,100 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check if user owns the resource
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    // Products Collection - Read for all, Write for authenticated users
+    match /products/{productId} {
+      // Anyone can read products
+      allow read: if true;
+      
+      // Only authenticated users can write (can be restricted to admin)
+      allow create, update, delete: if isAuthenticated();
+    }
+    
+    // Categories Collection - Read for all, Write for authenticated users
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create, update, delete: if isAuthenticated();
+    }
+    
+    // Carts Collection - Users can only access their own cart
+    match /carts/{userId} {
+      // Users can read their own cart
+      allow read: if isOwner(userId);
+      
+      // Users can create/update/delete their own cart
+      allow create, update, delete: if isOwner(userId);
+    }
+    
+    // User Preferences Collection - Users can only access their own preferences
+    match /userPreferences/{userId} {
+      allow read: if isOwner(userId);
+      allow create, update, delete: if isOwner(userId);
+    }
+    
+    // Orders Collection - Users can read their own orders, create orders
+    match /orders/{orderId} {
+      // Users can read orders if they own it or are admin
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        request.auth.token.admin == true
+      );
+      
+      // Users can create orders (userId must match authenticated user)
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Only admins can update/delete orders
+      allow update, delete: if isAuthenticated() && request.auth.token.admin == true;
+    }
+    
+    // Traffic Logs Collection - Admin only
+    match /traffic_logs/{logId} {
+      allow read, write: if isAuthenticated() && request.auth.token.admin == true;
+    }
+    
+    // Users Collection - Users can read their own data, admins can read all
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (
+        userId == request.auth.uid ||
+        request.auth.token.admin == true
+      );
+      
+      allow create: if isAuthenticated() && userId == request.auth.uid;
+      allow update: if isAuthenticated() && (
+        userId == request.auth.uid ||
+        request.auth.token.admin == true
+      );
+      
+      allow delete: if isAuthenticated() && request.auth.token.admin == true;
+    }
+    
+    // Feedback Collection - Users can create and read their own, admins can read all
+    match /feedbacks/{feedbackId} {
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        request.auth.token.admin == true
+      );
+      
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      allow update, delete: if isAuthenticated() && request.auth.token.admin == true;
+    }
+    
+    // Default deny for any other collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

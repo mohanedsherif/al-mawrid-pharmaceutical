@@ -1,0 +1,268 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=Open+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light dark;
+}
+
+@layer base {
+  * {
+    @apply border-slate-200 dark:border-slate-800;
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 200ms;
+  }
+  
+  html {
+    @apply scroll-smooth;
+  }
+  
+  body {
+    @apply bg-white text-[#2C3E50] antialiased dark:bg-[#0F1E2E] dark:text-[#E6EEF6];
+    font-family: 'Inter', 'Open Sans', system-ui, sans-serif;
+    transition: background-color 300ms ease, color 300ms ease;
+  }
+  
+  /* Typography - Poppins for headings, Inter for body */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', 'Montserrat', 'Inter', system-ui, sans-serif;
+    @apply font-semibold;
+    color: #2C3E50;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+  
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 {
+    color: #E6EEF6;
+  }
+  
+  /* Arabic fonts - Cairo for Arabic content */
+  body.lang-ar {
+    font-family: 'Cairo', 'IBM Plex Sans Arabic', 'Inter', system-ui, sans-serif;
+  }
+  
+  body.lang-ar h1, 
+  body.lang-ar h2, 
+  body.lang-ar h3, 
+  body.lang-ar h4, 
+  body.lang-ar h5, 
+  body.lang-ar h6 {
+    font-family: 'Cairo', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+    font-weight: 600;
+  }
+  
+  /* RTL Support */
+  [dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  [dir="ltr"] {
+    direction: ltr;
+    text-align: left;
+  }
+  
+  /* RTL-aware number formatting - numbers stay LTR */
+  [dir="rtl"] .number,
+  [dir="rtl"] .currency,
+  [dir="rtl"] input[type="number"] {
+    direction: ltr;
+    text-align: left;
+  }
+}
+
+@layer components {
+  .page-shell {
+    @apply min-h-screen flex flex-col bg-white dark:bg-[#0F1E2E];
+    background-color: #FFFFFF;
+  }
+  
+  .dark .page-shell {
+    background-color: #0F1E2E;
+  }
+
+  .container-main {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .container-narrow {
+    @apply w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  /* Button Variants - AL-MAWRID Brand */
+  .btn-primary {
+    @apply px-6 py-3 rounded-xl font-semibold text-white bg-cta-500 hover:bg-cta-600
+           active:scale-[0.98] transition-all duration-200 shadow-medium hover:shadow-hover
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100;
+    background: linear-gradient(135deg, #4ECDC4 0%, #42A9A9 100%);
+  }
+  
+  .btn-secondary {
+    @apply px-6 py-3 rounded-xl font-semibold text-primary-600 bg-primary-50 hover:bg-primary-100
+           dark:text-primary-300 dark:bg-primary-900/30 dark:hover:bg-primary-900/50
+           active:scale-[0.98] transition-all duration-200 border border-primary-200 dark:border-primary-800;
+  }
+  
+  .btn-ghost {
+    @apply px-6 py-3 rounded-xl font-semibold text-[#2C3E50] hover:bg-[#ECF0F3]
+           dark:text-[#E6EEF6] dark:hover:bg-[#16283D] active:scale-[0.98] transition-all duration-200;
+  }
+  
+  .btn-accent {
+    @apply px-6 py-3 rounded-xl font-semibold text-white bg-accent-500 hover:bg-accent-600
+           active:scale-[0.98] transition-all duration-200 shadow-medium hover:shadow-hover;
+  }
+  
+  /* Card - AL-MAWRID Style */
+  .card {
+    @apply bg-white dark:bg-[#16283D] rounded-2xl shadow-soft border border-[#B8C5D6]/50 dark:border-primary-700/30
+           transition-all duration-300 hover:shadow-medium backdrop-blur-sm;
+  }
+  
+  .card-hover {
+    @apply card hover:shadow-hover hover:-translate-y-1 hover:border-cta-300 dark:hover:border-cta-500/50;
+  }
+  
+  /* Input - AL-MAWRID Style */
+  .input {
+    @apply w-full px-4 py-3 rounded-xl border border-[#B8C5D6] dark:border-primary-700/50
+           bg-white dark:bg-[#16283D] text-[#2C3E50] dark:text-[#E6EEF6]
+           placeholder:text-slate-400 dark:placeholder:text-slate-400
+           focus:outline-none focus:ring-2 focus:border-transparent
+           transition-all duration-200;
+  }
+  
+  .input:focus {
+    --tw-ring-color: #4ECDC4; /* brand-cta */
+  }
+  
+  /* Select - AL-MAWRID Style */
+  select.input,
+  select {
+    @apply w-full px-4 py-3 rounded-xl border border-[#B8C5D6] dark:border-primary-700/50
+           bg-white dark:bg-[#16283D] text-[#2C3E50] dark:text-[#E6EEF6]
+           focus:outline-none focus:ring-2 focus:border-transparent
+           transition-all duration-200 cursor-pointer;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.5rem center;
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    padding-right: 2.5rem;
+    appearance: none;
+  }
+  
+  .dark select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%9ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  }
+  
+  /* Skeleton */
+  .skeleton {
+    @apply animate-pulse bg-slate-200 dark:bg-slate-800 rounded;
+  }
+  
+  /* Water Ripple Effect - AL-MAWRID Flow Theme */
+  .water-ripple {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+  
+  .water-ripple::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .water-ripple:hover::before {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .water-ripple:active {
+    transform: scale(0.98);
+  }
+  
+  /* Organic Curved Dividers */
+  .curved-divider {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .curved-divider::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    background: inherit;
+    border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  }
+  
+  /* Flow Animation for gradient backgrounds */
+  @keyframes flow-gradient {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  
+  .animate-flow-gradient {
+    animation: flow-gradient 15s ease infinite;
+  }
+  
+  /* Floating wave animations */
+  @keyframes floatWave1 {
+    0%, 100% {
+      transform: translate(33%, -33%) scale(1);
+    }
+    50% {
+      transform: translate(calc(33% + 30px), calc(-33% - 30px)) scale(1.1);
+    }
+  }
+  
+  @keyframes floatWave2 {
+    0%, 100% {
+      transform: translate(-33%, 33%) scale(1);
+    }
+    50% {
+      transform: translate(calc(-33% - 30px), calc(33% + 30px)) scale(1.15);
+    }
+  }
+  
+  @keyframes pulseGlow {
+    0%, 100% {
+      opacity: 0.3;
+      transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+  }
+  
+  @keyframes shimmerText {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
